@@ -13,7 +13,6 @@ import torch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from algebraics.algebraics import (  # noqa: E402
-    WIKI_VIEW,
     cache_path,
     consolidate,
     enumerate_abs_coeffs,
@@ -101,14 +100,19 @@ def load_or_compute_gpu(maxh: int, device: torch.device | None = None, batch: in
     return points
 
 
-def render_wiki(points: np.ndarray, out, width: int | None = None, height: int | None = None):
+def render_png(
+    points: np.ndarray,
+    out,
+    width: int = 1920,
+    height: int | None = None,
+    k1: float = 0.125,
+    k2: float = 0.5,
+):
     points, weights = consolidate(points)
-    if width is None:
-        width = WIKI_VIEW["width"]
     if height is None:
-        height = int(WIKI_VIEW["height"] * (width / WIKI_VIEW["width"]))
-    zoom = WIKI_VIEW["zoom"] * (width / WIKI_VIEW["width"])
-    img = render(points, width, height, WIKI_VIEW["ox"], WIKI_VIEW["oy"], zoom, weights=weights)
+        height = int(round(width * 9 / 16))
+    ox, oy, zoom = 0.0, 0.0, height / 5.0
+    img = render(points, width, height, ox, oy, zoom, k1, k2, weights=weights)
     save_png(img, Path(out))
     return img
 
@@ -121,9 +125,10 @@ if __name__ == "__main__":
     p.add_argument("--batch", type=int, default=4096)
     p.add_argument("--png", default="algebraics_gpu.png")
     p.add_argument("--width", type=int, default=1920)
+    p.add_argument("--height", type=int)
     p.add_argument("--cpu", action="store_true")
     args = p.parse_args()
     device = torch.device("cpu") if args.cpu else pick_device()
     pts = load_or_compute_gpu(args.maxh, device=device, batch=args.batch)
-    render_wiki(pts, args.png, width=args.width)
+    render_png(pts, args.png, width=args.width, height=args.height)
     print(f"wrote {args.png}")

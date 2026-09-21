@@ -14,8 +14,6 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from common.render import color_for_degree, save_png, splat, to_uint8  # noqa: E402
 
-WIKI_VIEW = dict(ox=0.86, oy=0.58, zoom=820.0, width=1920, height=1080)
-
 
 def enumerate_abs_coeffs(maxh: int):
     for h in range(2, maxh + 1):
@@ -249,7 +247,6 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     p.add_argument("--maxh", type=int, default=12)
     p.add_argument("--png", type=Path)
-    p.add_argument("--view", choices=("default", "wiki"), default="default")
     p.add_argument("--width", type=int, default=1280)
     p.add_argument("--height", type=int, default=720)
     p.add_argument("--k1", type=float, default=0.125)
@@ -266,12 +263,8 @@ def main(argv: list[str] | None = None) -> int:
     points, weights = consolidate(points)
     print(f"unique blobs={len(points)}", file=sys.stderr)
 
-    if args.view == "wiki":
-        ox, oy, zoom = WIKI_VIEW["ox"], WIKI_VIEW["oy"], WIKI_VIEW["zoom"]
-        width, height = WIKI_VIEW["width"], WIKI_VIEW["height"]
-    else:
-        width, height = args.width, args.height
-        ox, oy, zoom = 0.0, 0.0, height / 5.0
+    width, height = args.width, args.height
+    ox, oy, zoom = 0.0, 0.0, height / 5.0
 
     if args.png:
         save_png(render(points, width, height, ox, oy, zoom, args.k1, args.k2, weights), args.png)

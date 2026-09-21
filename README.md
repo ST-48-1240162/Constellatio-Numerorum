@@ -136,11 +136,11 @@ Defaults $k_1=0.125$, $k_2=0.5$. Leading coeff $c_k>0$, degree $k\ge 1$. Each $h
 
 ```bash
 python3 algebraics/algebraics.py --maxh 15
-python3 algebraics/algebraics.py --maxh 15 --view wiki --png algebraics/algebraics.png
+python3 algebraics/algebraics.py --maxh 15 --png algebraics/algebraics.png
 python3 algebraics/algebraics_gpu.py --maxh 17 --width 3840 --png algebraics/algebraics_h17_3840px.png
 ```
 
-`--view wiki`: `ox=0.86`, `oy=0.58`, `zoom=820` (1920×1080), matching [Algebraicszoom.png](https://commons.wikimedia.org/wiki/File:Algebraicszoom.png). Colab: `algebraics/colab_algebraics.ipynb`. Brooks used `maxh=15`; T4: 17, A100: 18.
+Colab: `algebraics/colab_algebraics.ipynb`. Brooks used `maxh=15`; T4: 17, A100: 18.
 
 `algebraics/algebraics_h17_3840px.png` (T4, batch 8192, 3840×2160): 803744 polys, 5744032 roots, 4660457 unique blobs, GPU roots 499 s.
 
