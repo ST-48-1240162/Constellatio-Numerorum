@@ -4,7 +4,7 @@
 
 ![random stable IIR poles, orders 2 to 18](iir-poles/poles_o18_3840px.png)
 
-![algebraic plane scatter, coeffs in [-3,3]](algebraics/algebraic_plane_readme.png)
+![algebraic plane scatter, coeffs in [-3,3]](algebraics/algebraic_plane.png)
 
 This repo is following Stephen J. Brooks's original code posted on the Wikipedia page of [algebraic numbers](https://en.wikipedia.org/wiki/Algebraic_number). Additive Lorentzian blobs in the complex plane. One folder per plot.
 
@@ -42,13 +42,15 @@ Matplotlib scatter of algebraic roots in the complex plane. Colour is degree (Br
 
 Enumeration: `--enum box` (all integer polys with coeffs in $`[-L,L]`$, default) or `--enum brooks` (Brooks bit encoding, needs `--gpu`). Roots cache to `algebraics/cache/plane_{enum}_{tag}.npz` unless `--recompute`.
 
+![algebraic plane scatter, coeffs in [-4,4], 1920 preview of 3840](algebraics/algebraic_plane_readme.png)
+
 ```bash
-python3 algebraics/algebraic_plane.py --width 960 --height 960 --png algebraics/algebraic_plane_readme.png
+python3 algebraics/algebraic_plane.py --png algebraics/algebraic_plane.png
 python3 algebraics/algebraic_plane.py --gpu --coeff-range 4 --max-degree 5 --png algebraics/algebraic_plane_3840px.png
 python3 algebraics/algebraic_plane.py --gpu --enum brooks --maxh 12 --weight h --png algebraics/algebraic_plane_brooks.png
 ```
 
-README preview: `algebraic_plane_readme.png` (960×960, box enum, `--weight both`, local CPU, ~17 s, 559k roots → 222k blobs). **Sample** (`algebraic_plane_3840px.png`, Colab T4, `coeff-range=4`): 2.53M roots, ~4.6 min.
+README: `algebraic_plane.png` (3840×3840, box enum, `coeff-range=3`, local CPU, cache hit ~11 s, 222k blobs). **Sample** (`algebraic_plane_3840px.png`, Colab T4, `coeff-range=4`): 2.53M roots, ~4.6 min. Docs preview: `algebraic_plane_readme.png` (1920×1920 resize of the 3840 sample).
 
 ## Random stable IIR poles
 
