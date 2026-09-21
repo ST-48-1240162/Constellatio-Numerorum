@@ -1,5 +1,11 @@
 # Constellatio Numerorum
 
+![algebraic numbers at maxh=17](algebraics/algebraics_h17_3840px.png)
+
+![algebraic plane scatter, coeffs in [-4,4]](algebraics/algebraic_plane_readme.png)
+
+![random stable IIR poles, orders 2 to 18](iir-poles/poles_o18_3840px.png)
+
 This repo is following Stephen J. Brooks's original code posted on the Wikipedia page of [algebraic numbers](https://en.wikipedia.org/wiki/Algebraic_number). Additive Lorentzian blobs in the complex plane. One folder per plot.
 
 ```
@@ -11,8 +17,6 @@ iir-poles/     random Schur-stable IIR poles
 `requirements.txt`: numpy, pygame, Pillow, matplotlib. GPU: PyTorch + CUDA. Run from repo root.
 
 ## Algebraic numbers
-
-![algebraic numbers at maxh=17](algebraics/algebraics_h17_3840px.png)
 
 Color is degree. Blob radius falls with Brooks complexity $`h`$:
 
@@ -34,8 +38,6 @@ python3 algebraics/algebraics_gpu.py --maxh 17 --width 3840 --png algebraics/alg
 
 ## Algebraic plane (scatter)
 
-![algebraic plane scatter, coeffs in [-4,4]](algebraics/algebraic_plane_readme.png)
-
 Matplotlib scatter of algebraic roots in the complex plane. Colour is degree (Brooks map). Default `--weight both`: dot size from coefficient height $`\max|c_i|`$, alpha from Brooks $`h`$ and $`k_2`$. Roots at the same rounded $`(x,y)`$ and degree merge; hit count boosts size/alpha. Low degree drawn last.
 
 Enumeration: `--enum box` (all integer polys with coeffs in $`[-L,L]`$, default) or `--enum brooks` (Brooks bit encoding, needs `--gpu`). Roots cache to `algebraics/cache/plane_{enum}_{tag}.npz` unless `--recompute`.
@@ -46,11 +48,9 @@ python3 algebraics/algebraic_plane.py --gpu --coeff-range 4 --max-degree 5 --png
 python3 algebraics/algebraic_plane.py --gpu --enum brooks --maxh 12 --weight h --png algebraics/algebraic_plane_brooks.png
 ```
 
-The image above is a 1920 resize of `algebraic_plane_3840px.png` (Colab T4, `coeff-range=4`, 2.53M roots, ~4.6 min). Local default (`coeff-range=3`): 222k blobs.
+The second image is a 1920 resize of `algebraic_plane_3840px.png` (Colab T4, `coeff-range=4`, 2.53M roots, ~4.6 min). Local default (`coeff-range=3`): 222k blobs.
 
 ## Random stable IIR poles
-
-![random stable IIR poles, orders 2 to 18](iir-poles/poles_o18_3840px.png)
 
 Draw reflection coeffs with $`|k|<1`$. Levinson step-up gives Schur polynomials, poles inside the unit circle. Color is order. Brightness is pole $`Q \approx 0.5\,r/(1-r)`$ ($`r=|z|`$). High order piles up near $`|z|=1`$.
 
