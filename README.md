@@ -18,7 +18,9 @@ iir-poles/     random Schur-stable IIR poles
 
 ## Colour
 
-`color_for_degree` in `common/render.py` picks RGB from `DEGREE_COLORS[o]`. Each point stores `o` in `points["o"]` or `pts["o"]`.
+All three plots share one hue table: the same `o` always gives the same RGB from `DEGREE_COLORS` in `common/render.py` (`color_for_degree`, or `degree_color` in the scatter script). What `o` counts depends on the plot; brightness and mark size do not.
+
+`color_for_degree` picks RGB from `DEGREE_COLORS[o]`. Each point stores `o` in `points["o"]` or `pts["o"]`.
 
 ```mermaid
 flowchart TD
@@ -48,55 +50,55 @@ flowchart TD
   </thead>
   <tbody>
     <tr>
-      <td><span style="display:inline-block;width:28px;height:28px;background-color:#FF0000;vertical-align:middle;margin-right:8px;"></span>red <code>1.00, 0.00, 0.00</code></td>
+      <td><span style="background-color:#FF0000;color:#fff;padding:2px 8px;">red</span> 1.00, 0.00, 0.00</td>
       <td>1</td>
       <td>degree-1 integer polynomial</td>
       <td>order-1 filter</td>
     </tr>
     <tr>
-      <td><span style="display:inline-block;width:28px;height:28px;background-color:#00FF00;vertical-align:middle;margin-right:8px;"></span>green <code>0.00, 1.00, 0.00</code></td>
+      <td><span style="background-color:#00FF00;color:#000;padding:2px 8px;">green</span> 0.00, 1.00, 0.00</td>
       <td>2</td>
       <td>degree 2</td>
       <td>order 2</td>
     </tr>
     <tr>
-      <td><span style="display:inline-block;width:28px;height:28px;background-color:#0000FF;vertical-align:middle;margin-right:8px;"></span>blue <code>0.00, 0.00, 1.00</code></td>
+      <td><span style="background-color:#0000FF;color:#fff;padding:2px 8px;">blue</span> 0.00, 0.00, 1.00</td>
       <td>3</td>
       <td>degree 3</td>
       <td>order 3</td>
     </tr>
     <tr>
-      <td><span style="display:inline-block;width:28px;height:28px;background-color:#B3B300;vertical-align:middle;margin-right:8px;"></span>olive <code>0.70, 0.70, 0.00</code></td>
+      <td><span style="background-color:#B3B300;color:#000;padding:2px 8px;">olive</span> 0.70, 0.70, 0.00</td>
       <td>4</td>
       <td>degree 4</td>
       <td>order 4</td>
     </tr>
     <tr>
-      <td><span style="display:inline-block;width:28px;height:28px;background-color:#FF9900;vertical-align:middle;margin-right:8px;"></span>orange <code>1.00, 0.60, 0.00</code></td>
+      <td><span style="background-color:#FF9900;color:#000;padding:2px 8px;">orange</span> 1.00, 0.60, 0.00</td>
       <td>5</td>
       <td>degree 5</td>
       <td>order 5</td>
     </tr>
     <tr>
-      <td><span style="display:inline-block;width:28px;height:28px;background-color:#00FFFF;vertical-align:middle;margin-right:8px;"></span>cyan <code>0.00, 1.00, 1.00</code></td>
+      <td><span style="background-color:#00FFFF;color:#000;padding:2px 8px;">cyan</span> 0.00, 1.00, 1.00</td>
       <td>6</td>
       <td>degree 6</td>
       <td>order 6</td>
     </tr>
     <tr>
-      <td><span style="display:inline-block;width:28px;height:28px;background-color:#FF00FF;vertical-align:middle;margin-right:8px;"></span>magenta <code>1.00, 0.00, 1.00</code></td>
+      <td><span style="background-color:#FF00FF;color:#fff;padding:2px 8px;">magenta</span> 1.00, 0.00, 1.00</td>
       <td>7</td>
       <td>degree 7</td>
       <td>order 7</td>
     </tr>
     <tr>
-      <td><span style="display:inline-block;width:28px;height:28px;background-color:#999999;vertical-align:middle;margin-right:8px;"></span>grey <code>0.60, 0.60, 0.60</code></td>
+      <td><span style="background-color:#999999;color:#fff;padding:2px 8px;">grey</span> 0.60, 0.60, 0.60</td>
       <td>8</td>
       <td>degree 8</td>
       <td>order 8</td>
     </tr>
     <tr>
-      <td><span style="display:inline-block;width:28px;height:28px;background-color:#FFFFFF;border:1px solid #666;vertical-align:middle;margin-right:8px;"></span>white <code>1.00, 1.00, 1.00</code></td>
+      <td><span style="background-color:#FFFFFF;color:#000;border:1px solid #666;padding:2px 8px;">white</span> 1.00, 1.00, 1.00</td>
       <td>0, ≥9</td>
       <td>slot unused; degree/order 9+</td>
       <td>same</td>
