@@ -18,13 +18,13 @@ iir-poles/     random Schur-stable IIR poles
 
 ## Algebraic numbers
 
-Color is degree. Blob radius falls with Brooks complexity $`h`$:
+Color is degree. Blob radius falls with Brooks complexity $h$:
 
-```math
-h = \sum_{n=0}^{k} \bigl(|c_n| + 1\bigr), \quad r = k_1 k_2^{h-3}
-```
+$$
+h = \sum_{n=0}^{k} \left(|c_n| + 1\right), \qquad r = k_1 k_2^{h-3}
+$$
 
-Defaults $`k_1=0.125`$, $`k_2=0.5`$. Leading coeff $`c_k>0`$, degree $`k\ge 1`$. Each $`h`$ is a unary bit encoding of $`|c_n|`$, then all sign patterns on non-leading nonzero coeffs. Roots: `numpy.roots` (CPU) or batched float64 companion eigenvalues (GPU). Overlapping hits at the same $`(x,y,h)`$ and degree merge. Brightness is hit count times blob size.
+Defaults $k_1=0.125$, $k_2=0.5$. Leading coeff $c_k>0$, degree $k\ge 1$. Each $h$ is a unary bit encoding of $|c_n|$, then all sign patterns on non-leading nonzero coeffs. Roots: `numpy.roots` (CPU) or batched float64 companion eigenvalues (GPU). Overlapping hits at the same $(x,y,h)$ and degree merge. Brightness is hit count times blob size.
 
 ```bash
 python3 algebraics/algebraics.py --maxh 15
