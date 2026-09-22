@@ -238,15 +238,18 @@ def load_or_collect(
         counts = d["counts"]
         return z, deg, height, brooks, counts
 
+    margin = 0.5
     if enum == "brooks":
         if gpu:
-            z, deg, height, brooks = collect_roots_gpu_brooks(maxh, xlim, ylim, device=device, batch=batch)
+            z, deg, height, brooks = collect_roots_gpu_brooks(
+                maxh, xlim, ylim, margin, device=device, batch=batch
+            )
         else:
             raise SystemExit("brooks enum needs --gpu (use box for CPU)")
     else:
         if gpu:
             z, deg, height, brooks = collect_roots_gpu_box(
-                max_degree, coeff_range, xlim, ylim, device=device, batch=batch
+                max_degree, coeff_range, xlim, ylim, margin, device=device, batch=batch
             )
         else:
             z, deg, height, brooks = collect_roots_cpu_box(max_degree, coeff_range, xlim, ylim)
