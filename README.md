@@ -19,6 +19,19 @@ iir-poles/           random Schur-stable IIR poles
 
 ## Colour
 
+<style>
+.hue { padding: 2px 8px; }
+.hue-red { background-color: #FF0000; color: #fff; }
+.hue-green { background-color: #00FF00; color: #000; }
+.hue-blue { background-color: #0000FF; color: #fff; }
+.hue-olive { background-color: #B3B300; color: #000; }
+.hue-orange { background-color: #FF9900; color: #000; }
+.hue-cyan { background-color: #00FFFF; color: #000; }
+.hue-magenta { background-color: #FF00FF; color: #fff; }
+.hue-grey { background-color: #999999; color: #fff; }
+.hue-white { background-color: #FFFFFF; color: #000; border: 1px solid #666; }
+</style>
+
 Both plots share one hue table: the same `o` always gives the same base RGB from `DEGREE_COLORS` in `common/render.py` (`color_for_degree`). What `o` counts depends on the plot. Brightness and mark size do not.
 
 For `color_for_degree`, indices `o = 1` to `8` map to `DEGREE_COLORS[o]`. For `o ≥ 9` (and any unlisted slot) the colour is **white**. Each point stores `o` in `points["o"]` or `pts["o"]`.
@@ -34,55 +47,55 @@ For `color_for_degree`, indices `o = 1` to `8` map to `DEGREE_COLORS[o]`. For `o
   </thead>
   <tbody>
     <tr>
-      <td><span style="background-color:#FF0000;color:#fff;padding:2px 8px;">red</span> 1.00, 0.00, 0.00</td>
+      <td><span class="hue hue-red">red</span> 1.00, 0.00, 0.00</td>
       <td>1</td>
       <td>degree-1 integer polynomial</td>
       <td>order 1</td>
     </tr>
     <tr>
-      <td><span style="background-color:#00FF00;color:#000;padding:2px 8px;">green</span> 0.00, 1.00, 0.00</td>
+      <td><span class="hue hue-green">green</span> 0.00, 1.00, 0.00</td>
       <td>2</td>
       <td>degree 2</td>
       <td>order 2</td>
     </tr>
     <tr>
-      <td><span style="background-color:#0000FF;color:#fff;padding:2px 8px;">blue</span> 0.00, 0.00, 1.00</td>
+      <td><span class="hue hue-blue">blue</span> 0.00, 0.00, 1.00</td>
       <td>3</td>
       <td>degree 3</td>
       <td>order 3</td>
     </tr>
     <tr>
-      <td><span style="background-color:#B3B300;color:#000;padding:2px 8px;">olive</span> 0.70, 0.70, 0.00</td>
+      <td><span class="hue hue-olive">olive</span> 0.70, 0.70, 0.00</td>
       <td>4</td>
       <td>degree 4</td>
       <td>order 4</td>
     </tr>
     <tr>
-      <td><span style="background-color:#FF9900;color:#000;padding:2px 8px;">orange</span> 1.00, 0.60, 0.00</td>
+      <td><span class="hue hue-orange">orange</span> 1.00, 0.60, 0.00</td>
       <td>5</td>
       <td>degree 5</td>
       <td>order 5</td>
     </tr>
     <tr>
-      <td><span style="background-color:#00FFFF;color:#000;padding:2px 8px;">cyan</span> 0.00, 1.00, 1.00</td>
+      <td><span class="hue hue-cyan">cyan</span> 0.00, 1.00, 1.00</td>
       <td>6</td>
       <td>degree 6</td>
       <td>order 6</td>
     </tr>
     <tr>
-      <td><span style="background-color:#FF00FF;color:#fff;padding:2px 8px;">magenta</span> 1.00, 0.00, 1.00</td>
+      <td><span class="hue hue-magenta">magenta</span> 1.00, 0.00, 1.00</td>
       <td>7</td>
       <td>degree 7</td>
       <td>order 7</td>
     </tr>
     <tr>
-      <td><span style="background-color:#999999;color:#fff;padding:2px 8px;">grey</span> 0.60, 0.60, 0.60</td>
+      <td><span class="hue hue-grey">grey</span> 0.60, 0.60, 0.60</td>
       <td>8</td>
       <td>degree 8</td>
       <td>order 8</td>
     </tr>
     <tr>
-      <td><span style="background-color:#FFFFFF;color:#000;border:1px solid #666;padding:2px 8px;">white</span> 1.00, 1.00, 1.00</td>
+      <td><span class="hue hue-white">white</span> 1.00, 1.00, 1.00</td>
       <td>≥9</td>
       <td>degree 9 and above</td>
       <td>order 9+ (if generated)</td>
@@ -179,17 +192,62 @@ algebraics/regions/deg2/
 algebraics/regions/deg9_plus/
 ```
 
-| plot | degree | colour |
-| --- | --- | --- |
-| `deg1` | 1 | <span style="background-color:#FF0000;color:#fff;padding:2px 8px;">red</span> |
-| `deg2` | 2 | <span style="background-color:#00FF00;color:#000;padding:2px 8px;">green</span> |
-| `deg3` | 3 | <span style="background-color:#0000FF;color:#fff;padding:2px 8px;">blue</span> |
-| `deg4` | 4 | <span style="background-color:#B3B300;color:#000;padding:2px 8px;">olive</span> |
-| `deg5` | 5 | <span style="background-color:#FF9900;color:#000;padding:2px 8px;">orange</span> |
-| `deg6` | 6 | <span style="background-color:#00FFFF;color:#000;padding:2px 8px;">cyan</span> |
-| `deg7` | 7 | <span style="background-color:#FF00FF;color:#fff;padding:2px 8px;">magenta</span> |
-| `deg8` | 8 | <span style="background-color:#999999;color:#fff;padding:2px 8px;">grey</span> |
-| `deg9_plus` | ≥9 | <span style="background-color:#FFFFFF;color:#000;border:1px solid #666;padding:2px 8px;">white</span> |
+<table>
+  <thead>
+    <tr>
+      <th>plot</th>
+      <th>degree</th>
+      <th>colour</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>deg1</code></td>
+      <td>1</td>
+      <td><span class="hue hue-red">red</span></td>
+    </tr>
+    <tr>
+      <td><code>deg2</code></td>
+      <td>2</td>
+      <td><span class="hue hue-green">green</span></td>
+    </tr>
+    <tr>
+      <td><code>deg3</code></td>
+      <td>3</td>
+      <td><span class="hue hue-blue">blue</span></td>
+    </tr>
+    <tr>
+      <td><code>deg4</code></td>
+      <td>4</td>
+      <td><span class="hue hue-olive">olive</span></td>
+    </tr>
+    <tr>
+      <td><code>deg5</code></td>
+      <td>5</td>
+      <td><span class="hue hue-orange">orange</span></td>
+    </tr>
+    <tr>
+      <td><code>deg6</code></td>
+      <td>6</td>
+      <td><span class="hue hue-cyan">cyan</span></td>
+    </tr>
+    <tr>
+      <td><code>deg7</code></td>
+      <td>7</td>
+      <td><span class="hue hue-magenta">magenta</span></td>
+    </tr>
+    <tr>
+      <td><code>deg8</code></td>
+      <td>8</td>
+      <td><span class="hue hue-grey">grey</span></td>
+    </tr>
+    <tr>
+      <td><code>deg9_plus</code></td>
+      <td>≥9</td>
+      <td><span class="hue hue-white">white</span></td>
+    </tr>
+  </tbody>
+</table>
 
 Any plot can still show clipped white/gold where many blobs of **that same degree** overlap.
 
