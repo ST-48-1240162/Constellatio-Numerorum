@@ -155,26 +155,12 @@ Callout geometry and labels live in `algebraics/regions/defs.py` (`CALLOUT_REGIO
 
 ### Annotated map
 
-7680×4320 full view with callout labels **A-E** (plus **B′**, **C′**) and a bottom-right legend.
-
 ```bash
 python3 algebraics/algebraics_gpu.py --maxh 17 --width 7680 --height 4320 \
   --png algebraics/algebraics_h17_7680px.png
 
 python3 algebraics/annotate_constellatio.py algebraics/algebraics_h17_7680px.png
 ```
-
-Writes `algebraics/constellatio_annotated.png`, `algebraics/constellatio_numerorum_annotated.png` (copy), and `algebraics/constellatio.pdf`.
-
-| callout | points at | hue-table link | single-colour plot |
-| --- | --- | --- | --- |
-| A | origin | degree 1 → red, clipped white/gold | `deg1` |
-| B, B′ | $z \approx \pm 1$ | same degree-1 pile-up | `deg1` |
-| C, C′ | $z \approx \pm \mathrm{i}$ | degree 2 → green | `deg2` |
-| D | degree-6 rosette | degree 6 → cyan | `deg6` |
-| E | mixed halo | degrees **3-8** overlaid → lavender | `deg3` through `deg8` |
-
-**E** is a callout about **additive mixing**, not a tenth colour. To reproduce its palette on the full map, overlay `deg3` through `deg8` (exclude `deg1`, `deg2`, `deg9_plus`). The callout text mentions “white” where local brightness clips. That is saturation, not the `deg9_plus` layer.
 
 ### Single-colour degree plots
 
