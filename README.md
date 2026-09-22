@@ -23,23 +23,6 @@ Both plots share one hue table: the same `o` always gives the same base RGB from
 
 For `color_for_degree`, indices `o = 1` to `8` map to `DEGREE_COLORS[o]`. For `o ≥ 9` (and any unlisted slot) the colour is **white**. Each point stores `o` in `points["o"]` or `pts["o"]`.
 
-```mermaid
-flowchart TD
-  alg["algebraic plots: o = k = deg p"]
-  iir["IIR plot: o = M = deg A"]
-  alg --> lut["color_for_degree(o)"]
-  iir --> lut
-  lut --> c1["1 red"]
-  lut --> c2["2 green"]
-  lut --> c3["3 blue"]
-  lut --> c4["4 olive"]
-  lut --> c5["5 orange"]
-  lut --> c6["6 cyan"]
-  lut --> c7["7 magenta"]
-  lut --> c8["8 grey"]
-  lut --> c9["≥9 white"]
-```
-
 <table>
   <thead>
     <tr>
