@@ -181,15 +181,15 @@ algebraics/regions/deg9_plus/
 
 | plot | degree | colour |
 | --- | --- | --- |
-| `deg1` | 1 | red |
-| `deg2` | 2 | green |
-| `deg3` | 3 | blue |
-| `deg4` | 4 | olive |
-| `deg5` | 5 | orange |
-| `deg6` | 6 | cyan |
-| `deg7` | 7 | magenta |
-| `deg8` | 8 | grey |
-| `deg9_plus` | ≥9 | white |
+| `deg1` | 1 | <span style="background-color:#FF0000;color:#fff;padding:2px 8px;">red</span> |
+| `deg2` | 2 | <span style="background-color:#00FF00;color:#000;padding:2px 8px;">green</span> |
+| `deg3` | 3 | <span style="background-color:#0000FF;color:#fff;padding:2px 8px;">blue</span> |
+| `deg4` | 4 | <span style="background-color:#B3B300;color:#000;padding:2px 8px;">olive</span> |
+| `deg5` | 5 | <span style="background-color:#FF9900;color:#000;padding:2px 8px;">orange</span> |
+| `deg6` | 6 | <span style="background-color:#00FFFF;color:#000;padding:2px 8px;">cyan</span> |
+| `deg7` | 7 | <span style="background-color:#FF00FF;color:#fff;padding:2px 8px;">magenta</span> |
+| `deg8` | 8 | <span style="background-color:#999999;color:#fff;padding:2px 8px;">grey</span> |
+| `deg9_plus` | ≥9 | <span style="background-color:#FFFFFF;color:#000;border:1px solid #666;padding:2px 8px;">white</span> |
 
 Any plot can still show clipped white/gold where many blobs of **that same degree** overlap.
 
