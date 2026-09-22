@@ -1,6 +1,8 @@
 # Constellatio Numerorum
 
-![algebraic numbers at maxh=17](algebraics/algebraics_h17_3840px.png)
+![algebraic numbers, full view](algebraics/algebraics_h17_3840px_default.png)
+
+![algebraic numbers, detail near (0.86, 0.58)](algebraics/algebraics_h17_wiki_crop.png)
 
 ![algebraic plane scatter, coeffs in [-4,4]](algebraics/algebraic_plane_readme.png)
 
@@ -134,15 +136,30 @@ $$
 
 Defaults $k_1=0.125$, $k_2=0.5$. Leading coeff $c_k>0$, degree $k\ge 1$. Each $h$ is a unary bit encoding of $|c_n|$, then all sign patterns on the non-leading nonzero coeffs. CPU: `numpy.roots`. GPU: batched float64 companion eigenvalues. Hits at the same $(x,y,h)$ and degree merge into one blob with $`w>1`$.
 
+Viewport is three numbers passed to `render`: centre $`(ox, oy)`$ in the complex plane and `zoom` (pixels per unit). Default centres on the origin:
+
 ```bash
-python3 algebraics/algebraics.py --maxh 15
+# full view (top image)
+python3 algebraics/algebraics_gpu.py --maxh 17 --width 3840 --height 2160 \
+  --png algebraics/algebraics_h17_3840px_default.png
+
+# detail crop like [Algebraicszoom.png](https://commons.wikimedia.org/wiki/File:Algebraicszoom.png) (second image)
+python3 algebraics/algebraics_gpu.py --maxh 17 --width 1920 --height 1080 \
+  --ox 0.86 --oy 0.58 --zoom 820 \
+  --png algebraics/algebraics_h17_wiki_crop.png
+```
+
+For another width, scale `zoom` with width. At 3840 px wide the same crop uses `--zoom 1640` ($820 \times 3840/1920$).
+
+CPU path:
+
+```bash
 python3 algebraics/algebraics.py --maxh 15 --png algebraics/algebraics.png
-python3 algebraics/algebraics_gpu.py --maxh 17 --width 3840 --png algebraics/algebraics_h17_3840px.png
 ```
 
 Colab: `algebraics/colab_algebraics.ipynb`. Brooks used `maxh=15`; T4: 17, A100: 18.
 
-`algebraics/algebraics_h17_3840px.png` (T4, batch 8192, 3840×2160): 803744 polys, 5744032 roots, 4660457 unique blobs, GPU roots 499 s.
+`algebraics/algebraics_h17_3840px_default.png` (T4, batch 8192, 3840×2160, default viewport): 803744 polys, 5744032 roots, 4660457 unique blobs, GPU roots 492 s.
 
 ## Algebraic plane (scatter)
 

@@ -249,6 +249,9 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--png", type=Path)
     p.add_argument("--width", type=int, default=1280)
     p.add_argument("--height", type=int, default=720)
+    p.add_argument("--ox", type=float, help="view centre x in the complex plane")
+    p.add_argument("--oy", type=float, help="view centre y in the complex plane")
+    p.add_argument("--zoom", type=float, help="pixels per unit (default height/5)")
     p.add_argument("--k1", type=float, default=0.125)
     p.add_argument("--k2", type=float, default=0.5)
     p.add_argument("--recompute", action="store_true")
@@ -264,7 +267,9 @@ def main(argv: list[str] | None = None) -> int:
     print(f"unique blobs={len(points)}", file=sys.stderr)
 
     width, height = args.width, args.height
-    ox, oy, zoom = 0.0, 0.0, height / 5.0
+    ox = 0.0 if args.ox is None else args.ox
+    oy = 0.0 if args.oy is None else args.oy
+    zoom = height / 5.0 if args.zoom is None else args.zoom
 
     if args.png:
         save_png(render(points, width, height, ox, oy, zoom, args.k1, args.k2, weights), args.png)

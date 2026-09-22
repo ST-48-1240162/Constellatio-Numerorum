@@ -105,13 +105,21 @@ def render_png(
     out,
     width: int = 1920,
     height: int | None = None,
+    ox: float | None = None,
+    oy: float | None = None,
+    zoom: float | None = None,
     k1: float = 0.125,
     k2: float = 0.5,
 ):
     points, weights = consolidate(points)
     if height is None:
         height = int(round(width * 9 / 16))
-    ox, oy, zoom = 0.0, 0.0, height / 5.0
+    if ox is None:
+        ox = 0.0
+    if oy is None:
+        oy = 0.0
+    if zoom is None:
+        zoom = height / 5.0
     img = render(points, width, height, ox, oy, zoom, k1, k2, weights=weights)
     save_png(img, Path(out))
     return img
@@ -126,9 +134,20 @@ if __name__ == "__main__":
     p.add_argument("--png", default="algebraics_gpu.png")
     p.add_argument("--width", type=int, default=1920)
     p.add_argument("--height", type=int)
+    p.add_argument("--ox", type=float)
+    p.add_argument("--oy", type=float)
+    p.add_argument("--zoom", type=float)
     p.add_argument("--cpu", action="store_true")
     args = p.parse_args()
     device = torch.device("cpu") if args.cpu else pick_device()
     pts = load_or_compute_gpu(args.maxh, device=device, batch=args.batch)
-    render_png(pts, args.png, width=args.width, height=args.height)
+    render_png(
+        pts,
+        args.png,
+        width=args.width,
+        height=args.height,
+        ox=args.ox,
+        oy=args.oy,
+        zoom=args.zoom,
+    )
     print(f"wrote {args.png}")
