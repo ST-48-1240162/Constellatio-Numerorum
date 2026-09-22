@@ -1,0 +1,15 @@
+% Single landscape PDF = one full-bleed annotated PNG (16:9, 7680×4320).
+%
+%   python3 algebraics/algebraics_gpu.py --maxh 17 --width 7680 --height 4320 \
+%     --png algebraics/algebraics_h17_7680px.png
+%   python3 algebraics/annotate_constellatio.py --pdf
+%
+% Output: constellatio.pdf — exactly one page, annotated image only.
+
+\documentclass[border=0pt]{standalone}
+
+\usepackage{graphicx}
+
+\begin{document}
+\includegraphics[width=16in]{constellatio_annotated.png}
+\end{document}

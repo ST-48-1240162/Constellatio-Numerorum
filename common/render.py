@@ -63,10 +63,17 @@ def add_points(img: np.ndarray, sx, sy, colors, weights):
             np.add.at(flat, yy[ok] * width + xx[ok], colors[ok] * (wx[ok] * wy[ok] * weights[ok])[:, None])
 
 
+def lorentz_stamp(cx: float, cy: float, hpix: float, x1: int, x2: int, y1: int, y2: int) -> np.ndarray:
+    """Lorentzian kernel over a pixel window; hpix is the radius in pixels."""
+    xs = np.arange(x1, x2, dtype=np.float32) - cx
+    ys = np.arange(y1, y2, dtype=np.float32) - cy
+    rr = ys[:, None] ** 2 + xs[None, :] ** 2
+    f = (hpix * hpix) / (1.0 + rr)
+    return np.minimum(f, 255.0) / 255.0
+
+
 def splat(img: np.ndarray, sx, sy, colors, half: np.ndarray):
     """Add Lorentzian blobs. half is the quad radius in pixels."""
-    tex = texture()
-    tsz = tex.shape[0]
     height, width, _ = img.shape
     tiny = half < 1.25
     if np.any(tiny):
@@ -82,13 +89,8 @@ def splat(img: np.ndarray, sx, sy, colors, half: np.ndarray):
         y2 = min(height, int(np.ceil(cy + hpix)) + 1)
         if x1 >= x2 or y1 >= y2:
             continue
-        xs = np.arange(x1, x2, dtype=np.float32)
-        ys = np.arange(y1, y2, dtype=np.float32)
-        u = (xs - (cx - hpix)) * (tsz / (2.0 * hpix))
-        v = (ys - (cy - hpix)) * (tsz / (2.0 * hpix))
-        ui = np.clip(u.astype(np.int32), 0, tsz - 1)
-        vi = np.clip(v.astype(np.int32), 0, tsz - 1)
-        img[y1:y2, x1:x2] += tex[np.ix_(vi, ui)][:, :, None] * colors[i]
+        kernel = lorentz_stamp(cx, cy, hpix, x1, x2, y1, y2)
+        img[y1:y2, x1:x2] += kernel[:, :, None] * colors[i]
 
 
 def to_uint8(img: np.ndarray) -> np.ndarray:
