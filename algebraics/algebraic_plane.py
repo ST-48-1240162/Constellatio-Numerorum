@@ -346,7 +346,12 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--xlim", type=float, nargs=2, default=(-2.2, 2.2))
     p.add_argument("--ylim", type=float, nargs=2, default=(-2.2, 2.2))
     p.add_argument("--width", type=int, default=3840)
-    p.add_argument("--height", type=int, default=3840)
+    p.add_argument(
+        "--height",
+        type=int,
+        default=None,
+        help="PNG height in px (default: width * y-range / x-range)",
+    )
     p.add_argument("--dpi", type=int, default=200)
     p.add_argument("--k2", type=float, default=0.5, help="Brooks blob decay for alpha/size")
     p.add_argument("--png", type=Path, default=Path(__file__).with_name("algebraic_plane_3840px.png"))
@@ -360,6 +365,14 @@ def main(argv: list[str] | None = None) -> int:
 
     xlim = tuple(args.xlim)
     ylim = tuple(args.ylim)
+    xspan = xlim[1] - xlim[0]
+    yspan = ylim[1] - ylim[0]
+    if args.height is not None:
+        height = args.height
+    elif abs(yspan - xspan) < 1e-9:
+        height = int(round(args.width * 9 / 16))
+    else:
+        height = int(round(args.width * yspan / xspan))
     if args.enum == "box":
         print(
             f"box enum: degree 1..{args.max_degree}, coeffs in [-{args.coeff_range}, {args.coeff_range}]",
@@ -399,7 +412,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  degree {d}: {int((deg == d).sum()):,} blobs", file=sys.stderr)
 
     fig = render_scatter(
-        z, deg, heights, brooks, counts, xlim, ylim, args.width, args.height, args.dpi, args.weight, args.k2
+        z, deg, heights, brooks, counts, xlim, ylim, args.width, height, args.dpi, args.weight, args.k2
     )
     fig.savefig(args.png, facecolor="black", dpi=args.dpi)
     plt.close(fig)
