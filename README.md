@@ -6,7 +6,7 @@
 
 ![random stable IIR poles, orders 2 to 18](iir-poles/poles_o18_3840px.png)
 
-Stephen J. Brooks's [algebraic numbers](https://en.wikipedia.org/wiki/Algebraic_number) sketch, reimplemented as additive Lorentzian blobs in the complex plane.
+This repository reimplements Stephen J. Brooks's [algebraic numbers](https://en.wikipedia.org/wiki/Algebraic_number) sketch as additive Lorentzian blobs in the complex plane.
 
 ```
 common/              splat + batched float64 roots
@@ -15,13 +15,11 @@ algebraics/regions/  single-colour full-map exports (deg1 to deg9_plus)
 iir-poles/           random Schur-stable IIR poles
 ```
 
-`requirements.txt`: numpy, pygame, Pillow, matplotlib. GPU: PyTorch + CUDA. PDF outputs also need `pdflatex` (TeX Live).
+Install numpy, pygame, Pillow, and matplotlib from `requirements.txt`. GPU rendering needs PyTorch and CUDA. PDF output also needs `pdflatex` from TeX Live.
 
 ## Colour
 
-Both plots share one hue table: the same `o` always gives the same base RGB from `DEGREE_COLORS` in `common/render.py` (`color_for_degree`). What `o` counts depends on the plot. Brightness and mark size do not.
-
-For `color_for_degree`, indices `o = 1` to `8` map to `DEGREE_COLORS[o]`. For `o ≥ 9` (and any unlisted slot) the colour is **white**. Each point stores `o` in `points["o"]` or `pts["o"]`.
+Both plots take hue from `o` through `DEGREE_COLORS` in `common/render.py` (`color_for_degree`). The same `o` always gives the same base RGB. Values from `o = 1` to `8` use the colours below. Values of `o ≥ 9` are white. Each point stores `o` in `points["o"]` or `pts["o"]`.
 
 <table>
   <thead>
@@ -58,41 +56,41 @@ For `color_for_degree`, indices `o = 1` to `8` map to `DEGREE_COLORS[o]`. For `o
       <td>order 4</td>
     </tr>
     <tr>
-      <td><span class="hue hue-orange">orange</span> 1.00, 0.60, 0.00</td>
+      <td><span style="background-color:#FF9900;color:#000;padding:2px 8px;">orange</span> 1.00, 0.60, 0.00</td>
       <td>5</td>
       <td>degree 5</td>
       <td>order 5</td>
     </tr>
     <tr>
-      <td><span class="hue hue-cyan">cyan</span> 0.00, 1.00, 1.00</td>
+      <td><span style="background-color:#00FFFF;color:#000;padding:2px 8px;">cyan</span> 0.00, 1.00, 1.00</td>
       <td>6</td>
       <td>degree 6</td>
       <td>order 6</td>
     </tr>
     <tr>
-      <td><span class="hue hue-magenta">magenta</span> 1.00, 0.00, 1.00</td>
+      <td><span style="background-color:#FF00FF;color:#fff;padding:2px 8px;">magenta</span> 1.00, 0.00, 1.00</td>
       <td>7</td>
       <td>degree 7</td>
       <td>order 7</td>
     </tr>
     <tr>
-      <td><span class="hue hue-grey">grey</span> 0.60, 0.60, 0.60</td>
+      <td><span style="background-color:#999999;color:#fff;padding:2px 8px;">grey</span> 0.60, 0.60, 0.60</td>
       <td>8</td>
       <td>degree 8</td>
       <td>order 8</td>
     </tr>
     <tr>
-      <td><span class="hue hue-white">white</span> 1.00, 1.00, 1.00</td>
+      <td><span style="background-color:#FFFFFF;color:#000;border:1px solid #666;padding:2px 8px;">white</span> 1.00, 1.00, 1.00</td>
       <td>≥9</td>
       <td>degree 9 and above</td>
-      <td>order 9+ (if generated)</td>
+      <td>order 9+</td>
     </tr>
   </tbody>
 </table>
 
-Algebraic plots: $`o = k = \deg p`$ for the enumerated $`p(z)=\sum_{n=0}^{k} c_n z^n`$ with $`c_k>0`$. The colour tags the polynomial you enumerated. A cubic in the list is blue at every root, even roots that also satisfy a linear or quadratic.
+On algebraic plots, $`o = k = \deg p`$ for the enumerated $`p(z)=\sum_{n=0}^{k} c_n z^n`$ with $`c_k>0`$. The colour is that polynomial's degree. A listed cubic is blue at all of its roots.
 
-IIR plot: $`o = M = \deg A`$ for $`A(z)=1+\sum_{m=1}^{M} a_m z^{-m}`$ from reflection coeffs $`k_0,\ldots,k_{M-1}`$.
+On the IIR plot, $`o = M = \deg A`$ for $`A(z)=1+\sum_{m=1}^{M} a_m z^{-m}`$ built from reflection coefficients $`k_0,\ldots,k_{M-1}`$.
 
 Brightness and mark width use different formulas on each plot:
 
@@ -101,13 +99,13 @@ Brightness and mark width use different formulas on each plot:
 | algebraic blobs | hit count $`w`$ at the same rounded $`(x,y,h,o)`$, splat amplitude $`w \cdot C(o)`$ | blob radius $`r = k_1 k_2^{h-3}`$, lower Brooks $`h`$, wider glow |
 | IIR poles | $`0.55 \cdot \mathrm{clip}(\log(1+Q)/6.5,\ 0.06,\ 1) \cdot C(o)`$, higher $`Q`$ when $`|z|`$ is closer to 1 | $`k_1 k_2^{M-2}`$, wider at higher order |
 
-Brooks complexity (algebraic plots):
+Brooks complexity on the algebraic plots is
 
 $$
 h = \sum_{n=0}^{k} \left(|c_n| + 1\right)
 $$
 
-IIR pole sharpness:
+IIR pole sharpness is
 
 $$
 Q \approx \frac{0.5\,|z|}{1-|z|}
@@ -115,9 +113,9 @@ $$
 
 ## Algebraic numbers
 
-Defaults $k_1=0.125$, $k_2=0.5$. Leading coeff $c_k>0$, degree $k\ge 1$. Each $h$ is a unary bit encoding of $|c_n|$, then all sign patterns on the non-leading nonzero coeffs. CPU: `numpy.roots`. GPU: batched float64 companion eigenvalues. Hits at the same $(x,y,h)$ and degree merge into one blob with $`w>1`$.
+The default values are $k_1=0.125$ and $k_2=0.5$. Polynomials have leading coefficient $c_k>0$ and degree $k\ge 1$. Each $h$ is a unary bit encoding of $|c_n|$, followed by all sign patterns on the non-leading nonzero coefficients. The CPU path uses `numpy.roots`. The GPU path uses batched float64 companion eigenvalues. Hits at the same $(x,y,h)$ and degree merge into one blob with $`w>1`$.
 
-Viewport is three numbers passed to `render`: centre $`(ox, oy)`$ in the complex plane and `zoom` (pixels per unit). Default centres on the origin with `zoom = height / 5`.
+The viewport is three numbers passed to `render`: the centre $`(ox, oy)`$ in the complex plane, and `zoom` in pixels per unit. The default view is centred on the origin with `zoom = height / 5`.
 
 ```bash
 # full view (top image)
@@ -130,28 +128,27 @@ python3 algebraics/algebraics_gpu.py --maxh 17 --width 1920 --height 1080 \
   --png algebraics/algebraics_h17_wiki_crop.png
 ```
 
-For another width, scale `zoom` with width. At 3840 px wide the same crop uses `--zoom 1640` ($820 \times 3840/1920$).
+If you change the width, scale `zoom` with the width. At 3840 px wide, the same crop uses `--zoom 1640` ($820 \times 3840/1920$).
 
-CPU path:
+The CPU command is:
 
 ```bash
 python3 algebraics/algebraics.py --maxh 15 --png algebraics/algebraics.png
 ```
 
-Colab: `algebraics/colab_algebraics.ipynb`. Brooks used `maxh=15`. T4: 17, A100: 18.
+The Colab notebook is `algebraics/colab_algebraics.ipynb`. Brooks used `maxh=15`. A T4 can run `maxh=17`, and an A100 can run `maxh=18`.
 
-`algebraics/algebraics_h17_3840px_default.png` (T4, batch 8192, 3840×2160, default viewport): 803744 polys, 5744032 roots, 4660457 unique blobs, GPU roots 492 s.
+The file `algebraics/algebraics_h17_3840px_default.png` was rendered on a T4 with batch 8192, at 3840×2160, with the default viewport. It has 803744 polynomials, 5744032 roots, and 4660457 unique blobs. GPU root finding took 492 s.
 
 ## Constellatio study
 
 ![constellatio annotated map, h=17, 7680×4320](algebraics/constellatio_annotated.png)
 
-Two related outputs share the same root cache (`--maxh` must match everywhere):
+The annotated map and the single-colour plots share the same root cache, so `--maxh` must match everywhere.
 
-1. **Annotated map**: one labelled full render (`constellatio.pdf`).
-2. **Single-colour plots**: nine full renders, one hue-table entry each (`deg1` to `deg9_plus`).
+The annotated map is one labelled full render (`constellatio.pdf`). The single-colour plots are nine full renders, one hue-table entry each (`deg1` to `deg9_plus`).
 
-Callout geometry and labels live in `algebraics/regions/defs.py` (`CALLOUT_REGIONS`). Degree-plot IDs live in the same file (`DEGREE_PLOTS`).
+Callout geometry and labels are in `algebraics/regions/defs.py` (`CALLOUT_REGIONS`). Degree-plot IDs are in the same file (`DEGREE_PLOTS`).
 
 ### Annotated map
 
@@ -170,7 +167,7 @@ python3 algebraics/regions/build.py
 # skip PDF: python3 algebraics/regions/build.py --no-pdf
 ```
 
-Reads the consolidated blob cache (no PNG input). Default **7680×4320**, viewport `centre (0,0)`, `zoom = height/5`. Writes one folder per plot:
+`build.py` reads the consolidated blob cache. The default size is 7680×4320, with viewport centre `(0,0)` and `zoom = height/5`. It writes one folder per plot:
 
 ```
 algebraics/regions/deg1/     deg1.png  deg1.pdf  points.npz  summary.txt
@@ -211,42 +208,42 @@ algebraics/regions/deg9_plus/
     <tr>
       <td><code>deg5</code></td>
       <td>5</td>
-      <td><span class="hue hue-orange">orange</span></td>
+      <td><span style="background-color:#FF9900;color:#000;padding:2px 8px;">orange</span></td>
     </tr>
     <tr>
       <td><code>deg6</code></td>
       <td>6</td>
-      <td><span class="hue hue-cyan">cyan</span></td>
+      <td><span style="background-color:#00FFFF;color:#000;padding:2px 8px;">cyan</span></td>
     </tr>
     <tr>
       <td><code>deg7</code></td>
       <td>7</td>
-      <td><span class="hue hue-magenta">magenta</span></td>
+      <td><span style="background-color:#FF00FF;color:#fff;padding:2px 8px;">magenta</span></td>
     </tr>
     <tr>
       <td><code>deg8</code></td>
       <td>8</td>
-      <td><span class="hue hue-grey">grey</span></td>
+      <td><span style="background-color:#999999;color:#fff;padding:2px 8px;">grey</span></td>
     </tr>
     <tr>
       <td><code>deg9_plus</code></td>
       <td>≥9</td>
-      <td><span class="hue hue-white">white</span></td>
+      <td><span style="background-color:#FFFFFF;color:#000;border:1px solid #666;padding:2px 8px;">white</span></td>
     </tr>
   </tbody>
 </table>
 
-Any plot can still show clipped white/gold where many blobs of **that same degree** overlap.
+Where many blobs of the same degree overlap, the colour clips to white or gold.
 
-Colab one-shot: `algebraics/colab_algebraics.ipynb`, or `algebraics/run_colab_cli.sh` (GPU render + degree plots + constellatio PDF → downloads `constellatio.pdf` and `constellatio_regions.zip`).
+For a one-shot Colab run, use `algebraics/colab_algebraics.ipynb` or `algebraics/run_colab_cli.sh`. That path does the GPU render, the degree plots, and the constellatio PDF, then downloads `constellatio.pdf` and `constellatio_regions.zip`.
 
 ## Random stable IIR poles
 
-Reflection coeffs with $`|k|<1`$. Levinson step-up to Schur polynomials. High order piles up near $`|z|=1`$.
+The script draws reflection coefficients with $`|k|<1`$ and uses the Levinson step-up to build Schur polynomials. Poles of high order pile up near $`|z|=1`$.
 
 ```bash
 python3 iir-poles/lattice_poles.py --orders 2-16 --n 350
 python3 iir-poles/lattice_poles.py --gpu --orders 2-18 --n 1500 --width 3840 --height 2160 --png iir-poles/poles_o18_3840px.png
 ```
 
-`iir-poles/poles_o18_3840px.png` (T4, orders 2-18): ~197k poles, median $`|z|`$ 0.76 (order 2) to 0.999 (order 18), ~1 min GPU. Colab: `iir-poles/colab_poles.ipynb`.
+The file `iir-poles/poles_o18_3840px.png` was rendered on a T4 for orders 2 to 18. It has about 197k poles. The median $`|z|`$ is 0.76 at order 2 and 0.999 at order 18. The GPU run takes about 1 minute. The Colab notebook is `iir-poles/colab_poles.ipynb`.
