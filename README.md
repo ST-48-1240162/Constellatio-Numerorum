@@ -120,12 +120,12 @@ The viewport is three numbers passed to `render`: the centre $`(ox, oy)`$ in the
 ```bash
 # full view (top image)
 python3 algebraics/algebraics_gpu.py --maxh 17 --width 3840 --height 2160 \
-  --png algebraics/algebraics_h17_3840px_default.png
+  --no-labels --png algebraics/algebraics_h17_3840px_default.png
 
 # detail crop like [Algebraicszoom.png](https://commons.wikimedia.org/wiki/File:Algebraicszoom.png) (second image)
 python3 algebraics/algebraics_gpu.py --maxh 17 --width 1920 --height 1080 \
   --ox 0.86 --oy 0.58 --zoom 820 \
-  --png algebraics/algebraics_h17_wiki_crop.png
+  --no-labels --png algebraics/algebraics_h17_wiki_crop.png
 ```
 
 If you change the width, scale `zoom` with the width. At 3840 px wide, the same crop uses `--zoom 1640` ($820 \times 3840/1920$).
@@ -135,6 +135,8 @@ The CPU command is:
 ```bash
 python3 algebraics/algebraics.py --maxh 15 --png algebraics/algebraics.png
 ```
+
+Local PNG and viewer runs label high-hit roots in place (0, ±1, ±1/2, ±i, the sixth roots, φ, …) from the same enumeration. Use `--no-labels` for a splat-only plate.
 
 The Colab notebook is `algebraics/colab_algebraics.ipynb`. Brooks used `maxh=15`. A T4 can run `maxh=17`, and an A100 can run `maxh=18`.
 
@@ -154,7 +156,7 @@ Callout geometry and labels are in `algebraics/regions/defs.py` (`CALLOUT_REGION
 
 ```bash
 python3 algebraics/algebraics_gpu.py --maxh 17 --width 7680 --height 4320 \
-  --png algebraics/algebraics_h17_7680px.png
+  --no-labels --png algebraics/algebraics_h17_7680px.png
 
 python3 algebraics/annotate_constellatio.py algebraics/algebraics_h17_7680px.png
 ```
