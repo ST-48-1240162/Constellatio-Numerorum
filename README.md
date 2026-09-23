@@ -6,7 +6,7 @@
 
 ![random stable IIR poles, orders 2 to 18](iir-poles/poles_o18_3840px.png)
 
-This repository reimplements Stephen J. Brooks's [algebraic numbers](https://en.wikipedia.org/wiki/Algebraic_number) sketch as additive Lorentzian blobs in the complex plane.
+This repository reimplements Stephen J. Brooks's [algebraic numbers](https://en.wikipedia.org/wiki/Algebraic_number) sketch as additive Lorentzian blobs in the complex plane. Brooks' original is [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/); this adaptation uses the same license. See [License](#license).
 
 ```
 common/              splat + batched float64 roots
@@ -247,3 +247,11 @@ python3 iir-poles/lattice_poles.py --gpu --orders 2-18 --n 1500 --width 3840 --h
 ```
 
 The file `iir-poles/poles_o18_3840px.png` was rendered on a T4 for orders 2 to 18. It has about 197k poles. The median $`|z|`$ is 0.76 at order 2 and 0.999 at order 18. The GPU run takes about 1 minute. The Colab notebook is `iir-poles/colab_poles.ipynb`.
+
+## License
+
+This work is licensed under [Creative Commons Attribution 3.0 Unported](https://creativecommons.org/licenses/by/3.0/). The legal code is in `LICENSE`.
+
+You are free to copy, distribute, transmit, and adapt the work, provided you give appropriate credit, link to the license, and say if changes were made. Do not suggest that the licensor endorses you or your use.
+
+The algebraic-number plots adapt Stephen J. Brooks's 2010 sketch ([source](https://en.wikipedia.org/wiki/User:Stephen_J._Brooks/algebraics/src), [Algebraicszoom.png](https://commons.wikimedia.org/wiki/File:Algebraicszoom.png)), also under CC BY 3.0. A copy of his program is `algebraics/original.c`. This repository reimplements that method in Python (CPU and GPU) and adds the annotated map, the degree plots, and the IIR-pole figure. Brooks does not endorse this adaptation.

@@ -1,9 +1,11 @@
-/* Stephen J. Brooks, 2010.
+/* Algebraic numbers — Stephen J. Brooks, 2010.
  * Source: https://en.wikipedia.org/wiki/User:Stephen_J._Brooks/algebraics/src
- * Licensed by the author under CC BY 3.0 (see Commons: Algebraicszoom.png).
+ * Image: https://commons.wikimedia.org/wiki/File:Algebraicszoom.png
+ * License: CC BY 3.0 Unported (https://creativecommons.org/licenses/by/3.0/)
  *
- * This will not compile: lset.c, graphics.c, WINMAIN and Complex live in
- * Brooks' private framework. Use algebraics.py instead.
+ * This file is a copy of Brooks' program. It will not compile here:
+ * lset.c, graphics.c, WINMAIN and Complex live in his private framework.
+ * algebraics.py is an adaptation of this source. Brooks does not endorse it.
  */
 #include <lset.c>
 #include <rnd/frnd.c>
