@@ -13,25 +13,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib import font_manager
 from PIL import Image, ImageDraw, ImageFont
 
-LM_ROMAN = "LMRoman10"
-for _fp in font_manager.findSystemFonts():
-    if "lmroman10" in _fp.lower():
-        font_manager.fontManager.addfont(_fp)
 plt.rcParams.update({
-    "mathtext.fontset": "custom",
-    "mathtext.rm": f"{LM_ROMAN}:bold",
-    "mathtext.it": f"{LM_ROMAN}:bold",
-    "mathtext.bf": f"{LM_ROMAN}:bold",
-    "mathtext.bfit": f"{LM_ROMAN}:bold",
-    "mathtext.cal": f"{LM_ROMAN}:bold",
-    "mathtext.sf": f"{LM_ROMAN}:bold",
-    "mathtext.tt": f"{LM_ROMAN}:bold",
+    "mathtext.fontset": "cm",
 })
 
-from algebraics.regions.defs import CALLOUT_REGIONS, REF_H, REF_W
+from algebraics.regions.defs import CALLOUT_REGIONS, NUMBER_TAGS, REF_H, REF_W
 from common.render import DEGREE_COLORS
 
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -60,14 +48,14 @@ HELV_ITALIC = _pick_font((
 ))
 WHITE = (255, 255, 255, 255)
 BOXFILL = (8, 8, 14, 178)
-LEADER  = (255, 255, 255, 175)
+LEADER  = (255, 214, 0, 255)
 
 base = overlay = d = None
 W = H = sx = sy = 0
 MATH_DPI = 120
 f_head = f_body = f_legend_h = f_legend = None
 
-LEGEND_TITLE = "meaning of colors"
+LEGEND_TITLE = "Colour key"
 LEGEND_ROWS = (
     (1, "degree 1"),
     (2, "degree 2"),
@@ -79,7 +67,7 @@ LEGEND_ROWS = (
     (8, "degree 8"),
     (0, "degree \u2265 9"),
 )
-LEGEND_ANCHOR_REF = (3700, 1980)
+LEGEND_ANCHOR_REF = (3824, 2144)
 _MATH_CACHE = {}
 _MATH_PT_CACHE = {}
 
@@ -100,10 +88,10 @@ def init_canvas(in_path, ref_w=REF_W, ref_h=REF_H):
     d = ImageDraw.Draw(overlay)
     sx, sy = W / ref_w, H / ref_h
     MATH_DPI = max(120, int(round(120 * sx)))
-    f_head = ImageFont.truetype(HELV_BOLD, fs(37))
-    f_body = ImageFont.truetype(HELV_REG, fs(32))
-    f_legend_h = ImageFont.truetype(HELV_BOLD, fs(34))
-    f_legend = ImageFont.truetype(HELV_REG, fs(31))
+    f_head = ImageFont.truetype(HELV_BOLD, fs(48))
+    f_body = ImageFont.truetype(HELV_REG, fs(42))
+    f_legend_h = ImageFont.truetype(HELV_BOLD, fs(44))
+    f_legend = ImageFont.truetype(HELV_REG, fs(40))
 
 def inter_text_height(font, sample="Ag"):
     bbox = d.textbbox((0, 0), sample, font=font)
@@ -141,6 +129,8 @@ def math_fontsize_for(inter_font):
     return pt
 
 def render_math(text, inter_font, color=WHITE):
+    if text.startswith("$") and text.endswith("$"):
+        text = r"$\boldsymbol{" + text[1:-1] + "}$"
     fontsize = math_fontsize_for(inter_font)
     key = (text, fontsize, color[:3], inter_font.size, inter_font.getname())
     if key in _MATH_CACHE:
@@ -205,7 +195,7 @@ def line_entry(text, font):
 
 def line_size(entry):
     kind, content, param = entry
-    gap = px(14)
+    gap = px(16)
     if kind == "text":
         bbox = d.textbbox((0, 0), content, font=param)
         return bbox[2] - bbox[0], bbox[3] - bbox[1] + gap
@@ -215,7 +205,7 @@ def line_size(entry):
 
 def measure_box(head, lines, pad=None):
     if pad is None:
-        pad = px(20)
+        pad = px(24)
     entries = ([line_entry(head, f_head)] if head else []) + [
         line_entry(t, f_body) for t in lines
     ]
@@ -233,12 +223,12 @@ def draw_box(rect, entries_pad):
         if kind == "text":
             bbox = d.textbbox((0, 0), content, font=param)
             d.text((left + pad, ty), content, font=param, fill=WHITE)
-            ty += bbox[3] - bbox[1] + px(14)
+            ty += bbox[3] - bbox[1] + px(16)
         else:
             img = render_mixed_line(content, param)
             line_h = max(inter_text_height(param), img.height)
             overlay.paste(img, (left + pad, ty), img)
-            ty += line_h + px(14)
+            ty += line_h + px(16)
 
 def rect_from_anchor(anchor_xy, mode, w, h):
     x, y = anchor_xy
@@ -283,14 +273,40 @@ def ray_to_rect_edge(rect, origin, direction):
     _, x, y = min(hits, key=lambda h: h[0])
     return (x, y)
 
-def callout(cx, cy, r, anchor_xy, mode, head, lines, leader_angle_offset_deg=0, leader_length_frac=1.0):
-    circle_bbox = [cx - r, cy - r, cx + r, cy + r]
-    d.ellipse(circle_bbox, outline=WHITE, width=max(1, px(7)))
+def draw_arrow(tip, tail, fill, width):
+    tx, ty = tip
+    ax, ay = tail
+    dx, dy = tx - ax, ty - ay
+    length = math.hypot(dx, dy)
+    if length < 1:
+        return
+    ux, uy = dx / length, dy / length
+    nx, ny = -uy, ux
+    head_len = min(max(width * 3.2, px(22)), length * 0.38)
+    head_half = min(max(width * 1.55, px(11)), head_len * 0.62)
+    shaft_end = (tx - ux * head_len * 0.55, ty - uy * head_len * 0.55)
+    d.line([tail, shaft_end], fill=fill, width=width)
+    left = (tx - ux * head_len + nx * head_half, ty - uy * head_len + ny * head_half)
+    right = (tx - ux * head_len - nx * head_half, ty - uy * head_len - ny * head_half)
+    d.polygon([tip, left, right], fill=fill)
+
+def callout(cx, cy, r, anchor_xy, mode, head, lines, leader_angle_offset_deg=0, leader_length_frac=1.0, leader_width=None, marker="circle"):
+    marker_rect = (cx - r, cy - r, cx + r, cy + r)
+    width = max(1, px(7))
+    if marker == "square":
+        d.rectangle(list(marker_rect), outline=WHITE, width=width)
+    else:
+        d.ellipse(list(marker_rect), outline=WHITE, width=width)
     w, h, entries, pad = measure_box(head, lines)
     rect = rect_from_anchor(anchor_xy, mode, w, h)
     box_center = ((rect[0] + rect[2]) / 2, (rect[1] + rect[3]) / 2)
-    ang = math.atan2(box_center[1] - cy, box_center[0] - cx)
-    start = (cx + r * math.cos(ang), cy + r * math.sin(ang))
+    if marker == "square":
+        start = ray_to_rect_edge(marker_rect, (cx, cy), (box_center[0] - cx, box_center[1] - cy))
+        if start is None:
+            start = nearest_edge_point(marker_rect, box_center)
+    else:
+        ang = math.atan2(box_center[1] - cy, box_center[0] - cx)
+        start = (cx + r * math.cos(ang), cy + r * math.sin(ang))
     end0 = nearest_edge_point(rect, (cx, cy))
     if leader_angle_offset_deg:
         ang0 = math.atan2(end0[1] - start[1], end0[0] - start[0])
@@ -305,7 +321,9 @@ def callout(cx, cy, r, anchor_xy, mode, head, lines, leader_angle_offset_deg=0, 
             start[0] + leader_length_frac * (end[0] - start[0]),
             start[1] + leader_length_frac * (end[1] - start[1]),
         )
-    d.line([start, end], fill=LEADER, width=max(1, px(5)))
+    if leader_width is None:
+        leader_width = max(2, px(10))
+    draw_arrow(start, end, LEADER, leader_width)
     draw_box(rect, (entries, pad))
     return rect
 
@@ -314,11 +332,11 @@ def _legend_rgb(degree_index: int) -> tuple[int, int, int]:
     return int(round(r * 255)), int(round(g * 255)), int(round(b * 255))
 
 def draw_legend(anchor_ref=LEGEND_ANCHOR_REF):
-    pad = px(20)
-    swatch = px(26)
-    gap = px(16)
-    row_gap = px(12)
-    title_gap = px(16)
+    pad = px(24)
+    swatch = px(32)
+    gap = px(18)
+    row_gap = px(14)
+    title_gap = px(18)
 
     title_bbox = d.textbbox((0, 0), LEGEND_TITLE, font=f_legend_h)
     title_h = title_bbox[3] - title_bbox[1]
@@ -371,7 +389,22 @@ def draw_callouts():
             list(region.lines),
             leader_angle_offset_deg=region.leader_angle_offset_deg,
             leader_length_frac=region.leader_length_frac,
+            leader_width=max(2, int(round(px(10) * (2 / 3 if region.id in ("D", "D_prime", "E") else 1)))),
+            marker=region.marker,
         )
+
+def draw_number_tags():
+    for tag in NUMBER_TAGS:
+        cx, cy, r = px(tag.ref_cx), py(tag.ref_cy), pr(tag.ref_r)
+        d.ellipse([cx - r, cy - r, cx + r, cy + r], outline=WHITE, width=max(1, px(7)))
+        w, h, entries, pad = measure_box(tag.label, [], pad=px(10))
+        rect = rect_from_anchor(
+            (px(tag.label_ref_x), py(tag.label_ref_y)),
+            tag.label_mode,
+            w,
+            h,
+        )
+        draw_box(rect, (entries, pad))
 
 def build_pdf(in_path=None):
     in_path = Path(in_path or SCRIPT_DIR / "algebraics_h17_7680px.png")
@@ -379,6 +412,7 @@ def build_pdf(in_path=None):
 
     init_canvas(in_path)
     draw_callouts()
+    draw_number_tags()
     draw_legend()
     out = Image.alpha_composite(base, overlay).convert("RGB")
     out.save(annotated_path)

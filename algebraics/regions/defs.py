@@ -55,6 +55,7 @@ class CalloutRegion:
     leader_length_frac: float = 1.0
     view_padding: float = 2.8
     point_margin: float = 1.05
+    marker: str = "circle"
 
     def world_circle(
         self,
@@ -85,88 +86,105 @@ class CalloutRegion:
         return max(2, int(round(rw * zoom)))
 
 
+@dataclass(frozen=True)
+class NumberTag:
+    ref_cx: float
+    ref_cy: float
+    ref_r: float
+    label: str
+    label_ref_x: float
+    label_ref_y: float
+    label_mode: str = "ma_b"
+
+
 CALLOUT_REGIONS: tuple[CalloutRegion, ...] = (
     CalloutRegion(
         "A",
         1920, 1080, 145,
         r"A Origin ($z = 0$)",
         (
-            "Thousands of degree-1 (rational) roots",
-            "coincide here, the overlap saturates",
-            "every colour channel to white / gold.",
+            r"Every degree contributes roots at $z=0$",
+            "(set the constant term to zero) — so all",
+            "nine hues pile up here, additively mixing",
+            "toward white, with gold where the lower",
+            "degrees still dominate in brightness.",
         ),
-        1170, 1830, "ma",
+        1170, 1750, "ma",
     ),
     CalloutRegion(
         "B",
         2352, 1080, 100,
         r"B $z \approx +1$ (rational)",
         (
-            r"Degree 1 $\to$ red in the hue table, but so",
-            "many roots pile up on an integer that",
-            "brightness clips past red into white/gold.",
+            "Degree 1 is red in the hue table.",
+            "Roots pile up on this integer and",
+            "clip the colour to white/gold.",
         ),
-        3800, 1230, "ra",
-    ),
-    CalloutRegion(
-        "B_prime",
-        1488, 1080, 100,
-        r"B$^\prime$ $z \approx -1$ (rational)",
-        (
-            r"Mirror of $z \approx +1$ across the origin.",
-            r"Same degree-1 pile-up on a rational integer,",
-            "brightness clips past red into white/gold.",
-        ),
-        150, 1230, "la",
+        3800, 1180, "ra",
     ),
     CalloutRegion(
         "C",
         1920, 640, 65,
         r"C $z \approx \mathrm{i}$ (quadratic)",
         (
-            r"Root of $z^2+1=0$ (degree 2) $\to$ green.",
+            r"Root of $z^2+1=0$ (degree 2), green in the hue table.",
         ),
         2450, 300, "la",
         leader_angle_offset_deg=30,
-    ),
-    CalloutRegion(
-        "C_prime",
-        1920, 1520, 65,
-        r"C$^\prime$ $z \approx -\mathrm{i}$ (quadratic)",
-        (
-            r"Mirror of $z \approx \mathrm{i}$ across the origin.",
-            r"Root of $z^2+1=0$ (degree 2) $\to$ green.",
-        ),
-        2450, 1860, "la_b",
-        leader_angle_offset_deg=-30,
     ),
     CalloutRegion(
         "D",
         2137, 706, 80,
         "D Degree-6 rosette",
         (
+            r"$z = e^{i\pi/3} = \dfrac{1 + i\sqrt{3}}{2}$",
             "Cyan in the hue table. The six conjugate",
-            "roots of one degree-6 family land close",
-            "together, drawing a six-fold flower.",
+            "roots of one degree-6 family sit close",
+            "together as a six-fold flower.",
         ),
-        3470, 550, "ra",
+        3170, 550, "ra",
         leader_length_frac=3 / 4,
     ),
     CalloutRegion(
         "E",
-        1630, 840, 50,
+        1580, 706, 240,
         "E Violet halo",
         (
-            "Overlapping degrees 3\u20138 (blue, magenta,",
-            "olive, grey, white) at low brightness,",
-            "additive blending averages them to lavender.",
+            "Clustering ring near the unit circle.",
+            "Degrees 3-8 (blue, magenta, olive,",
+            "grey, white) mix to lavender.",
+            "From the separate degree plots, this halo",
+            "is mainly degrees 5, 6, 7, 8 and 9.",
         ),
-        420, 540, "la",
+        480, 560, "la",
+        leader_length_frac=3 / 4,
+        marker="square",
+    ),
+    CalloutRegion(
+        "D_prime",
+        2136, 1454, 80,
+        r"D$^\prime$ Degree-6 rosette",
+        (
+            r"$z = e^{-i\pi/3} = \dfrac{1 - i\sqrt{3}}{2}$",
+            "Cyan in the hue table. The six conjugate",
+            "roots of one degree-6 family sit close",
+            "together as a six-fold flower.",
+        ),
+        3170, 1610, "ra_b",
         leader_length_frac=3 / 4,
     ),
 )
 
 CALLOUT_BY_ID = {r.id: r for r in CALLOUT_REGIONS}
+
+NUMBER_TAGS: tuple[NumberTag, ...] = (
+    NumberTag(2136, 1080, 42, r"$1/2$", 2136, 990),
+    NumberTag(1704, 1080, 42, r"$-1/2$", 1704, 1175, "ma"),
+    NumberTag(2784, 1080, 48, r"$2$", 2784, 990),
+    NumberTag(1056, 1080, 48, r"$-2$", 1056, 990),
+    NumberTag(2568, 1080, 36, r"$3/2$", 2568, 990),
+    NumberTag(1272, 1080, 36, r"$-3/2$", 1272, 990),
+)
 
 
 @dataclass(frozen=True)
