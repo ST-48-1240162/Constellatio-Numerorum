@@ -13,6 +13,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from common.render import color_for_degree, save_png, splat, to_uint8  # noqa: E402
+from algebraics.root_labels import apply_root_labels, find_hotspots  # noqa: E402
 
 
 def enumerate_abs_coeffs(maxh: int):
@@ -134,7 +135,7 @@ def render(
     return img
 
 
-def run_viewer(points: np.ndarray, ox: float, oy: float, zoom: float, k1: float, k2: float, size, weights=None):
+def run_viewer(points: np.ndarray, ox: float, oy: float, zoom: float, k1: float, k2: float, size, weights=None, labels=None):
     import pygame
 
     width, height = size
@@ -154,6 +155,8 @@ def run_viewer(points: np.ndarray, ox: float, oy: float, zoom: float, k1: float,
     def paint(scale: float):
         rw, rh = max(1, int(width * scale)), max(1, int(height * scale))
         img = render(points, rw, rh, ox, oy, zoom * scale, k1, k2, weights)
+        if labels is not None and scale >= 0.99:
+            img = apply_root_labels(img, points, ox, oy, zoom * scale, weights, labels=labels)
         surf = pygame.image.frombuffer(to_uint8(img).tobytes(), (rw, rh), "RGB")
         if (rw, rh) != (width, height):
             surf = pygame.transform.smoothscale(surf, (width, height))
@@ -231,7 +234,10 @@ def run_viewer(points: np.ndarray, ox: float, oy: float, zoom: float, k1: float,
                     dirty = True
                 elif event.key == pygame.K_s:
                     out = Path("algebraics.png")
-                    save_png(render(points, width, height, ox, oy, zoom, k1, k2, weights), out)
+                    img = render(points, width, height, ox, oy, zoom, k1, k2, weights)
+                    if labels is not None:
+                        img = apply_root_labels(img, points, ox, oy, zoom, weights, labels=labels)
+                    save_png(img, out)
                     print(f"wrote {out.resolve()}", file=sys.stderr)
         if dirty:
             paint(0.4 if preview else 1.0)
@@ -255,6 +261,10 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--k1", type=float, default=0.125)
     p.add_argument("--k2", type=float, default=0.5)
     p.add_argument("--recompute", action="store_true")
+    p.add_argument("--labels", dest="labels", action="store_true", default=True,
+                   help="name high-hit roots on the PNG (default)")
+    p.add_argument("--no-labels", dest="labels", action="store_false",
+                   help="splat only")
     args = p.parse_args(argv)
 
     if args.recompute:
@@ -271,11 +281,16 @@ def main(argv: list[str] | None = None) -> int:
     oy = 0.0 if args.oy is None else args.oy
     zoom = height / 5.0 if args.zoom is None else args.zoom
 
+    labels = find_hotspots(points, weights) if args.labels else None
+
     if args.png:
-        save_png(render(points, width, height, ox, oy, zoom, args.k1, args.k2, weights), args.png)
+        img = render(points, width, height, ox, oy, zoom, args.k1, args.k2, weights)
+        if labels is not None:
+            img = apply_root_labels(img, points, ox, oy, zoom, weights, labels=labels)
+        save_png(img, args.png)
         print(f"wrote {args.png}", file=sys.stderr)
         return 0
-    run_viewer(points, ox, oy, zoom, args.k1, args.k2, (width, height), weights)
+    run_viewer(points, ox, oy, zoom, args.k1, args.k2, (width, height), weights, labels)
     return 0
 
 

@@ -18,6 +18,7 @@ from algebraics.algebraics import (  # noqa: E402
     enumerate_abs_coeffs,
     render,
 )
+from algebraics.root_labels import apply_root_labels  # noqa: E402
 from common.gpu_roots import pick_device, roots_batched  # noqa: E402
 from common.render import save_png  # noqa: E402
 
@@ -110,6 +111,7 @@ def render_png(
     zoom: float | None = None,
     k1: float = 0.125,
     k2: float = 0.5,
+    labels: bool = False,
 ):
     points, weights = consolidate(points)
     if height is None:
@@ -121,6 +123,8 @@ def render_png(
     if zoom is None:
         zoom = height / 5.0
     img = render(points, width, height, ox, oy, zoom, k1, k2, weights=weights)
+    if labels:
+        img = apply_root_labels(img, points, ox, oy, zoom, weights)
     save_png(img, Path(out))
     return img
 
@@ -138,6 +142,10 @@ if __name__ == "__main__":
     p.add_argument("--oy", type=float)
     p.add_argument("--zoom", type=float)
     p.add_argument("--cpu", action="store_true")
+    p.add_argument("--labels", dest="labels", action="store_true", default=True,
+                   help="name high-hit roots on the PNG (default)")
+    p.add_argument("--no-labels", dest="labels", action="store_false",
+                   help="splat only")
     args = p.parse_args()
     device = torch.device("cpu") if args.cpu else pick_device()
     pts = load_or_compute_gpu(args.maxh, device=device, batch=args.batch)
@@ -149,5 +157,6 @@ if __name__ == "__main__":
         ox=args.ox,
         oy=args.oy,
         zoom=args.zoom,
+        labels=args.labels,
     )
     print(f"wrote {args.png}")
