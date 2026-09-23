@@ -120,17 +120,19 @@ CALLOUT_REGIONS: tuple[CalloutRegion, ...] = (
             "Roots pile up on this integer and",
             "clip the colour to white/gold.",
         ),
-        3800, 1180, "ra",
+        3300, 1680, "ra",
     ),
     CalloutRegion(
         "C",
-        1920, 640, 65,
+        1920, 648, 65,
         r"C $z \approx \mathrm{i}$ (quadratic)",
         (
-            r"Root of $z^2+1=0$ (degree 2), green in the hue table.",
+            r"Root of $z^2+1=0$ (degree 2).",
+            r"Almost every other degree piles up here too:",
+            r"any polynomial with a factor $(z^2+1)$",
+            r"has these two roots for certain.",
         ),
-        2450, 300, "la",
-        leader_angle_offset_deg=30,
+        2320, 40, "la",
     ),
     CalloutRegion(
         "D",
@@ -156,22 +158,9 @@ CALLOUT_REGIONS: tuple[CalloutRegion, ...] = (
             "From the separate degree plots, this halo",
             "is mainly degrees 5, 6, 7, 8 and 9.",
         ),
-        480, 560, "la",
+        378, 160, "la",
         leader_length_frac=3 / 4,
         marker="square",
-    ),
-    CalloutRegion(
-        "D_prime",
-        2136, 1454, 80,
-        r"D$^\prime$ Degree-6 rosette",
-        (
-            r"$z = e^{-i\pi/3} = \dfrac{1 - i\sqrt{3}}{2}$",
-            "Cyan in the hue table. The six conjugate",
-            "roots of one degree-6 family sit close",
-            "together as a six-fold flower.",
-        ),
-        3170, 1610, "ra_b",
-        leader_length_frac=3 / 4,
     ),
 )
 

@@ -273,6 +273,91 @@ def ray_to_rect_edge(rect, origin, direction):
     _, x, y = min(hits, key=lambda h: h[0])
     return (x, y)
 
+def _snap_deg(ang_deg):
+    return round(ang_deg / 45.0) * 45.0
+
+
+def _angle_candidates(ang_deg):
+    base = _snap_deg(ang_deg)
+    opts = [base + 45 * k for k in range(-4, 5)]
+    opts.sort(key=lambda a: abs((a - ang_deg + 180) % 360 - 180))
+    seen = []
+    for a in opts:
+        key = round(a) % 360
+        if key in seen:
+            continue
+        seen.append(key)
+        yield a
+
+
+def _marker_hit_along(cx, cy, r, marker, nx, ny, offset):
+    if marker == "square":
+        return None
+    half_sq = r * r - offset * offset
+    if half_sq < -1e-6:
+        return None
+    half = math.sqrt(max(0.0, half_sq))
+    return half
+
+
+def _aabb_projection(rect, nx, ny):
+    left, top, right, bottom = rect
+    vals = [left * nx + top * ny, right * nx + top * ny, left * nx + bottom * ny, right * nx + bottom * ny]
+    return min(vals), max(vals)
+
+
+def _segment_at_angle(cx, cy, r, marker, marker_rect, rect, ux, uy):
+    end = ray_to_rect_edge(rect, (cx, cy), (ux, uy))
+    if marker == "square":
+        start = ray_to_rect_edge(marker_rect, (cx, cy), (ux, uy))
+    else:
+        start = (cx + r * ux, cy + r * uy)
+    if start is not None and end is not None:
+        return start, end
+    nx, ny = -uy, ux
+    c_n = cx * nx + cy * ny
+    if marker == "square":
+        m_lo, m_hi = _aabb_projection(marker_rect, nx, ny)
+    else:
+        m_lo, m_hi = c_n - r, c_n + r
+    b_lo, b_hi = _aabb_projection(rect, nx, ny)
+    lo, hi = max(m_lo, b_lo), min(m_hi, b_hi)
+    if lo > hi + 1e-6:
+        return None
+    s = min(max(c_n, lo), hi)
+    offset = s - c_n
+    if marker == "square":
+        origin = (cx + offset * nx - r * ux, cy + offset * ny - r * uy)
+        start = ray_to_rect_edge(marker_rect, origin, (ux, uy))
+        if start is None:
+            start = nearest_edge_point(marker_rect, (cx + offset * nx, cy + offset * ny))
+        end = ray_to_rect_edge(rect, start, (ux, uy))
+        if end is None:
+            return None
+        return start, end
+    half = _marker_hit_along(cx, cy, r, marker, nx, ny, offset)
+    if half is None:
+        return None
+    for sign in (-1.0, 1.0):
+        start = (cx + offset * nx + sign * half * ux, cy + offset * ny + sign * half * uy)
+        end = ray_to_rect_edge(rect, start, (ux, uy))
+        if end is not None:
+            return start, end
+    return None
+
+
+def _snapped_leader(cx, cy, r, marker, marker_rect, rect, start, end, offset_deg):
+    ang = math.degrees(math.atan2(end[1] - start[1], end[0] - start[0]))
+    if offset_deg:
+        ang -= offset_deg
+    for deg in _angle_candidates(ang):
+        ux, uy = math.cos(math.radians(deg)), math.sin(math.radians(deg))
+        hit = _segment_at_angle(cx, cy, r, marker, marker_rect, rect, ux, uy)
+        if hit is not None:
+            return hit
+    return start, end
+
+
 def draw_arrow(tip, tail, fill, width):
     tx, ty = tip
     ax, ay = tail
@@ -294,9 +379,9 @@ def callout(cx, cy, r, anchor_xy, mode, head, lines, leader_angle_offset_deg=0, 
     marker_rect = (cx - r, cy - r, cx + r, cy + r)
     width = max(1, px(7))
     if marker == "square":
-        d.rectangle(list(marker_rect), outline=WHITE, width=width)
+        d.rectangle(list(marker_rect), outline=LEADER, width=width)
     else:
-        d.ellipse(list(marker_rect), outline=WHITE, width=width)
+        d.ellipse(list(marker_rect), outline=LEADER, width=width)
     w, h, entries, pad = measure_box(head, lines)
     rect = rect_from_anchor(anchor_xy, mode, w, h)
     box_center = ((rect[0] + rect[2]) / 2, (rect[1] + rect[3]) / 2)
@@ -308,14 +393,9 @@ def callout(cx, cy, r, anchor_xy, mode, head, lines, leader_angle_offset_deg=0, 
         ang = math.atan2(box_center[1] - cy, box_center[0] - cx)
         start = (cx + r * math.cos(ang), cy + r * math.sin(ang))
     end0 = nearest_edge_point(rect, (cx, cy))
-    if leader_angle_offset_deg:
-        ang0 = math.atan2(end0[1] - start[1], end0[0] - start[0])
-        line_ang = ang0 - math.radians(leader_angle_offset_deg)
-        end = ray_to_rect_edge(rect, start, (math.cos(line_ang), math.sin(line_ang)))
-        if end is None:
-            end = end0
-    else:
-        end = end0
+    start, end = _snapped_leader(
+        cx, cy, r, marker, marker_rect, rect, start, end0, leader_angle_offset_deg,
+    )
     if leader_length_frac != 1.0:
         end = (
             start[0] + leader_length_frac * (end[0] - start[0]),
