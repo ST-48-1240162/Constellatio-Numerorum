@@ -6,6 +6,16 @@
 
 ![random stable IIR poles, orders 2 to 18](iir-poles/poles_o18_3840px.png)
 
+Two labelling methods live on different branches.
+
+Callout map on `master` — yellow leaders and boxes A–E, drawn after the splat by `annotate_constellatio.py`.
+
+![constellatio annotated map, h=17, 7680×4320 (`master`)](algebraics/constellatio_annotated.png)
+
+Inline root labels on `feat/inline-root-labels` — high-hit roots named while the PNG is written (`root_labels.py`).
+
+![algebraic numbers, labelled detail near (0.86, 0.58) (`feat/inline-root-labels`)](algebraics/algebraics_h17_wiki_crop_labeled.png)
+
 This repository reimplements Stephen J. Brooks's [algebraic numbers](https://en.wikipedia.org/wiki/Algebraic_number) sketch as additive Lorentzian blobs in the complex plane. Brooks' original is [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/); this adaptation uses the same license. See [License](#license).
 
 ```
@@ -126,6 +136,11 @@ python3 algebraics/algebraics_gpu.py --maxh 17 --width 3840 --height 2160 \
 python3 algebraics/algebraics_gpu.py --maxh 17 --width 1920 --height 1080 \
   --ox 0.86 --oy 0.58 --zoom 820 \
   --no-labels --png algebraics/algebraics_h17_wiki_crop.png
+
+# same crop with inline labels (`feat/inline-root-labels`)
+python3 algebraics/algebraics_gpu.py --maxh 17 --width 3840 --height 2160 \
+  --ox 0.86 --oy 0.58 --zoom 1640 \
+  --png algebraics/algebraics_h17_wiki_crop_labeled.png
 ```
 
 If you change the width, scale `zoom` with the width. At 3840 px wide, the same crop uses `--zoom 1640` ($820 \times 3840/1920$).
@@ -144,9 +159,7 @@ The file `algebraics/algebraics_h17_3840px_default.png` was rendered on a T4 wit
 
 ## Constellatio study
 
-![constellatio annotated map, h=17, 7680×4320](algebraics/constellatio_annotated.png)
-
-The annotated map and the single-colour plots share the same root cache, so `--maxh` must match everywhere.
+The callout map on `master` (figure above) and the single-colour plots share the same root cache, so `--maxh` must match everywhere.
 
 The annotated map is one labelled full render (`constellatio.pdf`). The single-colour plots are nine full renders, one hue-table entry each (`deg1` to `deg9_plus`).
 
