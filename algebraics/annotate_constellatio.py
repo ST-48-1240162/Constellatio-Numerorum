@@ -217,7 +217,7 @@ def measure_box(head, lines, pad=None):
 def draw_box(rect, entries_pad):
     entries, pad = entries_pad
     left, top, right, bottom = rect
-    d.rounded_rectangle(rect, radius=px(14), fill=BOXFILL)
+    d.rounded_rectangle(rect, radius=1, fill=BOXFILL)
     ty = top + pad
     for kind, content, param in entries:
         if kind == "text":
@@ -357,7 +357,7 @@ def draw_legend(anchor_ref=LEGEND_ANCHOR_REF):
     anchor_y = min(py(anchor_ref[1]), H - px(16))
     rect = rect_from_anchor((anchor_x, anchor_y), "ra_b", panel_w, panel_h)
     left, top, _, _ = rect
-    d.rounded_rectangle(rect, radius=px(14), fill=BOXFILL)
+    d.rounded_rectangle(rect, radius=1, fill=BOXFILL)
 
     ty = top + pad
     d.text((left + pad, ty), LEGEND_TITLE, font=f_legend_h, fill=WHITE)
