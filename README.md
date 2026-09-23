@@ -142,7 +142,13 @@ The file `algebraics/algebraics_h17_3840px_default.png` was rendered on a T4 wit
 
 ## Constellatio study
 
-![constellatio annotated map, h=17, 7680×4320](algebraics/constellatio_annotated.png)
+Callout map on `master` — yellow leaders and boxes A–E, drawn after the splat by `annotate_constellatio.py`.
+
+![constellatio annotated map, h=17, 7680×4320 (`master`)](algebraics/constellatio_annotated.png)
+
+Inline root labels on `feat/inline-root-labels` — high-hit roots named while the PNG is written (`root_labels.py`).
+
+![algebraic numbers, labelled detail near (0.86, 0.58) (`feat/inline-root-labels`)](algebraics/algebraics_h17_wiki_crop_labeled.png)
 
 The annotated map and the single-colour plots share the same root cache, so `--maxh` must match everywhere.
 
