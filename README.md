@@ -142,32 +142,38 @@ The file `algebraics/algebraics_h17_3840px_default.png` was rendered on a T4 wit
 
 ## Constellatio study
 
-Callout map on `master` — yellow leaders and boxes A–E, drawn after the splat by `annotate_constellatio.py`.
+Callout map on `master`. Yellow leaders and boxes A–E.
 
 ![constellatio annotated map, h=17, 7680×4320 (`master`)](algebraics/constellatio_annotated.png)
 
-Inline root labels on `feat/inline-root-labels` — high-hit roots named while the PNG is written (`root_labels.py`).
+Inline root labels on `feat/inline-root-labels`. High-hit roots named on the splat.
 
 ![algebraic numbers, labelled detail near (0.86, 0.58) (`feat/inline-root-labels`)](algebraics/algebraics_h17_wiki_crop_labeled.png)
+
+White circles on the callout map mark named algebraic numbers.
+
+Real axis: $`\pm 3`$, $`\pm 4`$, $`\pm 5/2`$, plus $`\sqrt{2}`$, $`-\sqrt{2}`$, the golden ratio $`\varphi`$ and its conjugate $`1-\varphi`$. Also $`\pm 1/2`$, $`\pm 3/2`$, $`\pm 2`$.
+
+Imaginary axis: $`\pm i`$, $`\pm i\sqrt{2}`$, $`\pm i\sqrt{3}`$, $`\pm 2i`$.
+
+Off-axis: the two primitive cube roots of unity at $`120^\circ`$ and $`-120^\circ`$, $`e^{2\pi i/3}`$ and $`e^{-2\pi i/3}`$. They sit in the six-fold unit-circle pattern but they are degree 2 (roots of $`z^2+z+1=0`$). They are the twins of D at $`60^\circ`$ and of the matching point at $`-60^\circ`$.
+
+Yellow boxes: A is the origin $`z=0`$. B is $`+1`$. C is $`+i`$. D is $`e^{i\pi/3}=(1+i\sqrt{3})/2`$ at $`60^\circ`$. E is the violet ring near the unit circle.
+
+The second figure is a crop near $`(0.86,\ 0.58)`$. It names the same first-quadrant cluster: $`0`$, $`1/2`$, $`1`$, $`2`$, $`\varphi`$, $`i`$, $`e^{i\pi/3}`$, $`e^{i\pi/4}`$, $`e^{i\pi/5}`$.
+
+## Degree plots
 
 The annotated map and the single-colour plots share the same root cache, so `--maxh` must match everywhere.
 
 The annotated map is one labelled full render (`constellatio.pdf`). The single-colour plots are nine full renders, one hue-table entry each (`deg1` to `deg9_plus`).
-
-Callout geometry and labels are in `algebraics/regions/defs.py` (`CALLOUT_REGIONS`). Degree-plot IDs are in the same file (`DEGREE_PLOTS`).
-
-### Annotated map
 
 ```bash
 python3 algebraics/algebraics_gpu.py --maxh 17 --width 7680 --height 4320 \
   --png algebraics/algebraics_h17_7680px.png
 
 python3 algebraics/annotate_constellatio.py algebraics/algebraics_h17_7680px.png
-```
 
-### Single-colour degree plots
-
-```bash
 python3 algebraics/regions/build.py
 # subset:  python3 algebraics/regions/build.py --plots deg3 deg6
 # skip PDF: python3 algebraics/regions/build.py --no-pdf
