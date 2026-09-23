@@ -6,16 +6,6 @@
 
 ![random stable IIR poles, orders 2 to 18](iir-poles/poles_o18_3840px.png)
 
-Two labelling methods live on different branches.
-
-Callout map on `master` — yellow leaders and boxes A–E, drawn after the splat by `annotate_constellatio.py`.
-
-![constellatio annotated map, h=17, 7680×4320 (`master`)](algebraics/constellatio_annotated.png)
-
-Inline root labels on `feat/inline-root-labels` — high-hit roots named while the PNG is written (`root_labels.py`).
-
-![algebraic numbers, labelled detail near (0.86, 0.58) (`feat/inline-root-labels`)](algebraics/algebraics_h17_wiki_crop_labeled.png)
-
 This repository reimplements Stephen J. Brooks's [algebraic numbers](https://en.wikipedia.org/wiki/Algebraic_number) sketch as additive Lorentzian blobs in the complex plane. Brooks' original is [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/); this adaptation uses the same license. See [License](#license).
 
 ```
